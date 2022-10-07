@@ -59,10 +59,10 @@ interface charactersInfo {
 }
 
 const characters: charactersInfo = {
-    lowercase: "abcdefghijklmnopqrstuvwxyz",
-    uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    numbers: "0123456789",
-    symbols: "^!$%&|[](){}:;.,*+-#@<>~"
+  lowercase: "abcdefghijklmnopqrstuvwxyz",
+  uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  numbers: "0123456789",
+  symbols: "^!$%&|[](){}:;.,*+-#@<>~"
 }
 
 const password = ref('');
@@ -104,6 +104,10 @@ function generatePassword() {
 }
 
 watch(passwordLength, () => {
+  generatePassword();
+});
+
+watch(options, () => {
   generatePassword();
 });
 
