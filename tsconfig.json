@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "noImplicitAny": false,
+    "strictNullChecks": true,
     "target": "ESNext",
     "useDefineForClassFields": true,
     "module": "ESNext",

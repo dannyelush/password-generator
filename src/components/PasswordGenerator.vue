@@ -3,7 +3,7 @@
     <h2>Password Generator</h2>
     <div class="wrapper">
       <div class="input-box">
-        <input type="text" spellcheck="false" readonly="" v-model="password"/>
+        <input type="text" spellcheck="false" readonly v-model="password"/>
         <span class="material-symbols-rounded" ref="copyBtn" @click.prevent="copy">copy_all</span>
       </div>
       <div class="pass-indicator" :id="passIndicatorId"></div>
@@ -51,7 +51,14 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
 
-const characters = {
+interface charactersInfo {
+  lowercase: string;    
+  uppercase: string;
+  numbers: string;
+  symbols: string;
+}
+
+const characters: charactersInfo = {
     lowercase: "abcdefghijklmnopqrstuvwxyz",
     uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     numbers: "0123456789",
@@ -63,7 +70,7 @@ const passwordLength = ref(15);
 const sliderMax = 30;
 const options = ref(['lowercase'])
 const percent = computed(() => (passwordLength.value / sliderMax) * 100);
-const copyBtn = ref(null);
+const copyBtn = ref<HTMLInputElement | null>(null);
 
 const passIndicatorId = computed(() => {
   return passwordLength.value <= 8 ? "weak" : passwordLength.value <= 16 ? "medium" : "strong";
@@ -75,7 +82,7 @@ function generatePassword() {
   excludeDuplicate = false,
   passLength = passwordLength.value;
 
-  options.value.forEach(option => {
+  options.value.forEach((option: string) => {
       if(option !== "exc-duplicate" && option !== "spaces") {
         staticPassword += characters[option];
       } else if(option === "spaces") {
@@ -102,12 +109,16 @@ watch(passwordLength, () => {
 
 function copy() {
   navigator.clipboard.writeText(password.value).then(() => {
+    if (copyBtn && copyBtn.value) {
       copyBtn.value.innerText = "check";
       copyBtn.value.style.color = "#9b59b6";
       setTimeout(() => {
+        if (copyBtn && copyBtn.value) {
           copyBtn.value.innerText = "copy_all";
           copyBtn.value.style.color = "#707070";
+        }
       }, 1500);
+    }
   }).catch(err => {
       alert(`Couldn't copy the password: ${err}`);
   });
